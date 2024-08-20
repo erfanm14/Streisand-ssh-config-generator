@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSH URL Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #sshUrl {
+            word-break: break-all;
+            background-color: #e8f4fd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .copy-btn {
+            background-color: #2ecc71;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .copy-btn:hover {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <h1>SSH URL Generator</h1>
+    <form id="sshForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="ip">IP Address:</label>
+        <input type="text" id="ip" name="ip" required>
+
+        <label for="port">Port:</label>
+        <input type="text" id="port" name="port" value="22" required>
+
+        <label for="label">Label:</label>
+        <input type="text" id="label" name="label" required>
+
+        <button type="button" onclick="generateSSHURL()">Generate SSH URL</button>
+    </form>
+
+    <div id="result" style="display:none;">
+        <h2>Generated SSH URL:</h2>
+        <p id="sshUrl"></p>
+        <button id="copyBtn" class="copy-btn" onclick="copyToClipboard()">Copy URL</button>
+    </div>
+
+    <script>
+        function generateSSHURL() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const ip = document.getElementById("ip").value;
+            const port = document.getElementById("port").value;
+            const label = document.getElementById("label").value;
+
+            const fullString = `${username}:1:::${password}@${ip}:${port}`;
+            const encodedString = btoa(fullString);
+            const sshUrl = `ssh://${encodedString}#${label}`;
+
+            document.getElementById("sshUrl").innerText = sshUrl;
+            document.getElementById("result").style.display = "block";
+        }
+
+        function copyToClipboard() {
+            const sshUrl = document.getElementById("sshUrl").innerText;
+            navigator.clipboard.writeText(sshUrl).then(() => {
+                const copyBtn = document.getElementById("copyBtn");
+                copyBtn.innerText = "Copied!";
+                setTimeout(() => {
+                    copyBtn.innerText = "Copy URL";
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
